@@ -15,7 +15,6 @@ export default class FirebaseUI extends React.Component {
             },
             'signInOptions': [
                 firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-                firebase.auth.EmailAuthProvider.PROVIDER_ID,
             ],
         };
         ui.start('#firebaseui-auth', uiConfig);

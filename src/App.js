@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './App.css';
 import firebase from './firebase';
-import FirebaseUi from './firebaseui';
+import UserPane from './user-pane';
 
 class App extends Component {
   constructor() {
@@ -64,7 +64,6 @@ class App extends Component {
             <h1>Fun Food Friends</h1>
           </div>
         </header>
-        <FirebaseUi />
         <div className='container'>
             <section className='add-item'>
                 <form onSubmit={this.handleSubmit}>
@@ -73,6 +72,7 @@ class App extends Component {
                     <button>Add Item</button>
                 </form>
             </section>
+            <UserPane />
             <section className='display-item'>
                 <div className='wrapper'>
                     <ul>
