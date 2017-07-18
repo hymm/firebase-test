@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import './App.css';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/css/bootstrap-theme.css';
+import { Grid, Row, Col, Navbar, Nav, MenuItem, NavDropdown, NavItem, } from 'react-bootstrap';
 import firebase from './firebase';
 import UserPane from './user-pane';
 
@@ -39,7 +41,16 @@ class App extends Component {
   }
 
   componentDidMount() {
-      const itemsRef = firebase.database().ref('items');
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        window.localStorage.setItem(storageKey, user.uid);
+        this.setState({uid: user.uid});
+      } else {
+        window.localStorage.removeItem({storageKey});
+        this.setState({uid: null});
+      }
+    });
+      /*const itemsRef = firebase.database().ref('items');
       itemsRef.on('value', (snapshot) => {
          let items = snapshot.val();
          let newState = [];
@@ -53,43 +64,36 @@ class App extends Component {
          this.setState({
              items: newState
          });
-      });
+      })*/
   }
 
   render() {
     return (
-      <div className="App">
-        <header>
-          <div className='wrapper'>
-            <h1>Fun Food Friends</h1>
-          </div>
-        </header>
-        <div className='container'>
-            <section className='add-item'>
-                <form onSubmit={this.handleSubmit}>
-                    <input type="text" name="username" placeholder="What's your name?" onChange={this.handleChange} value={this.state.username} />
-                    <input type="text" name="currentItem" placeholder="What are you bringing?" onChange={this.handleChange} value={this.state.currentItem} />
-                    <button>Add Item</button>
-                </form>
-            </section>
+      <Grid fluid>
+        <Navbar fluid>
+          <Navbar.Header>
+            <Navbar.Brand>
+              <a href="#">React-Bootstrap</a>
+            </Navbar.Brand>
+          </Navbar.Header>
+          <Nav>
+            <NavItem eventKey={1} href="#">Link</NavItem>
+            <NavItem eventKey={2} href="#">Link</NavItem>
+            <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
+              <MenuItem eventKey={3.1}>Action</MenuItem>
+              <MenuItem eventKey={3.2}>Another action</MenuItem>
+              <MenuItem eventKey={3.3}>Something else here</MenuItem>
+              <MenuItem divider />
+              <MenuItem eventKey={3.4}>Separated link</MenuItem>
+            </NavDropdown>
+          </Nav>
+        </Navbar>
+        <Row>
+          <Col md={12}>
             <UserPane />
-            <section className='display-item'>
-                <div className='wrapper'>
-                    <ul>
-                        {this.state.items.map((item) => {
-                          return (
-                            <li key={item.id}>
-                              <h3>{item.title}</h3>
-                              <p>brought by: {item.user}</p>
-                              <button onClick={() => this.removeItem(item.id)}>Remove Item</button>
-                            </li>
-                          )
-                        })}
-                    </ul>
-                </div>
-            </section>
-        </div>
-      </div>
+          </Col>
+        </Row>
+      </Grid>
     );
   }
 }
