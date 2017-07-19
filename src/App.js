@@ -4,36 +4,18 @@ import 'bootstrap/dist/css/bootstrap-theme.css';
 import { Grid, Row, Col, Navbar, Nav, MenuItem, NavDropdown, NavItem, } from 'react-bootstrap';
 import firebase from './firebase';
 import UserPane from './user-pane';
+import UserMenu from './user-menu';
+
+const storageKey = 'STORAGEKEYNAME';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      currentItem: '',
       username: '',
-      items: [],
+      uid: null,
     };
   }
-
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  handleSubmit = (e) => {
-      e.preventDefault();
-      const itemsRef = firebase.database().ref('items');
-      const item = {
-          title: this.state.currentItem,
-          user: this.state.username,
-      };
-      itemsRef.push(item);
-      this.setState({
-          currentItem: '',
-          username: '',
-      });
-  };
 
   removeItem(itemId) {
       const itemRef = firebase.database().ref(`/items/${itemId}`);
@@ -41,13 +23,14 @@ class App extends Component {
   }
 
   componentDidMount() {
-    auth.onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       if (user) {
+        console.log(user)
         window.localStorage.setItem(storageKey, user.uid);
-        this.setState({uid: user.uid});
+        this.setState({ uid: user.uid, username: user.displayName });
       } else {
         window.localStorage.removeItem({storageKey});
-        this.setState({uid: null});
+        this.setState({ uid: null, username: 'Guest' });
       }
     });
       /*const itemsRef = firebase.database().ref('items');
@@ -77,6 +60,7 @@ class App extends Component {
             </Navbar.Brand>
           </Navbar.Header>
           <Nav>
+            <UserMenu uid={this.state.uid} username={this.state.username}/>
             <NavItem eventKey={1} href="#">Link</NavItem>
             <NavItem eventKey={2} href="#">Link</NavItem>
             <NavDropdown eventKey={3} title="Dropdown" id="basic-nav-dropdown">
