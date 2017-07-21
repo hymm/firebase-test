@@ -1,6 +1,7 @@
 import React from 'react';
 import { NavDropdown, MenuItem, } from 'react-bootstrap';
 import firebase from './firebase';
+import Link from './link-container';
 
 export default class UserMenu extends React.Component {
   render() {
@@ -10,7 +11,7 @@ export default class UserMenu extends React.Component {
     ];
 
     const LoggedOutMenu = [
-      <MenuItem eventKey={3.1}>Login</MenuItem>
+      <Link to={'/login'}><MenuItem eventKey={3.1}>Login</MenuItem></Link>
     ];
 
     return (
